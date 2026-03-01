@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 flex-grow">
+    
+    <div class="flex justify-between items-center mb-10 border-b border-gray-800 pb-6">
+        <h1 class="text-3xl font-bold text-white flex items-center gap-3">
+            <i class="fa-solid fa-gear text-indigo-500"></i> Account Settings
+        </h1>
+        <a href="{{ url_for('dashboard') }}" class="bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold py-2 px-6 rounded-lg transition-all flex items-center gap-2">
+            <i class="fa-solid fa-arrow-left"></i> Back to Hub
+        </a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="mb-6 p-4 rounded-lg {% if category == 'success' %}bg-emerald-900/50 border border-emerald-500/50 text-emerald-200{% else %}bg-red-900/50 border border-red-500/50 text-red-200{% endif %} flex items-center gap-3">
+                    <i class="fa-solid {% if category == 'success' %}fa-check-circle{% else %}fa-circle-exclamation{% endif %}"></i> {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <div class="lg:col-span-1 space-y-8">
+            <div class="glass-card p-6 rounded-2xl border border-gray-700">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="h-16 w-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg">
+                        {{ username[0]|upper }}
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-white">{{ username }}</h2>
+                        <span class="bg-indigo-500/20 text-indigo-400 text-xs px-2 py-1 rounded-md border border-indigo-500/30">Standard Plan</span>
+                    </div>
+                </div>
+                <div class="border-t border-gray-700/50 pt-4">
+                    <p class="text-gray-400 text-sm flex justify-between"><span>Study Packs Generated:</span> <span class="text-white font-bold">{{ notes_count }}</span></p>
+                </div>
+            </div>
+
+            <div class="glass-card p-6 rounded-2xl border border-gray-700">
+                <h3 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-lock text-gray-400"></i> Security</h3>
+                <form action="{{ url_for('settings') }}" method="POST" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-1">Current Password</label>
+                        <input type="password" name="current_password" required class="w-full bg-gray-900 border border-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-400 mb-1">New Password</label>
+                        <input type="password" name="new_password" required class="w-full bg-gray-900 border border-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none">
+                    </div>
+                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg transition-all">Update Password</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="lg:col-span-2 space-y-8">
+            
+            <div class="glass-card p-8 rounded-2xl border border-gray-700 relative overflow-hidden">
+                <div class="absolute top-0 right-0 -mr-8 -mt-8 h-32 w-32 bg-indigo-500/10 blur-3xl rounded-full pointer-events-none"></div>
+                <h3 class="text-xl font-bold text-white mb-6"><i class="fa-regular fa-credit-card text-indigo-400"></i> Billing & Subscription</h3>
+                
+                <div class="bg-gray-900/50 rounded-xl p-5 border border-gray-700 mb-6 flex justify-between items-center">
+                    <div>
+                        <h4 class="text-white font-semibold">Free Tier</h4>
+                        <p class="text-gray-400 text-sm mt-1">Basic transcription and AI summaries.</p>
+                    </div>
+                    <span class="text-2xl font-bold text-white">$0<span class="text-sm text-gray-500 font-normal">/mo</span></span>
+                </div>
+                
+                <button disabled class="w-full bg-gray-800 text-gray-500 border border-gray-700 font-bold py-3 rounded-xl cursor-not-allowed">
+                    <i class="fa-solid fa-lock"></i> Upgrade to Pro (Coming Soon)
+                </button>
+            </div>
+
+            <div class="glass-card p-8 rounded-2xl border border-emerald-500/30 relative overflow-hidden">
+                <div class="absolute top-0 right-0 -mr-8 -mt-8 h-32 w-32 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none"></div>
+                <h3 class="text-xl font-bold text-white mb-2"><i class="fa-solid fa-hand-holding-heart text-emerald-400"></i> Your Philanthropy Impact</h3>
+                <p class="text-gray-400 text-sm mb-6">Manage your sponsored students and donation history.</p>
+                
+                <div class="text-center py-8 bg-gray-900/50 rounded-xl border border-gray-800 border-dashed">
+                    <div class="text-emerald-500/50 text-4xl mb-3"><i class="fa-solid fa-seedling"></i></div>
+                    <p class="text-gray-400 font-medium">You haven't sponsored a student yet.</p>
+                    <p class="text-gray-500 text-sm mt-1 mb-4">Help someone access premium education tools.</p>
+                    <button disabled class="bg-emerald-600/50 text-emerald-200 font-semibold py-2 px-6 rounded-lg cursor-not-allowed border border-emerald-500/50">
+                        <i class="fa-solid fa-lock"></i> Setup Payment Method
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

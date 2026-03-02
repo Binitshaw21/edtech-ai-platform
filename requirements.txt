@@ -3,8 +3,8 @@ Flask-Login==0.6.3
 Flask-Bcrypt==1.0.1
 pymongo==4.6.1
 python-dotenv==1.0.0
-openai-whisper==20231117
-yt-dlp==2023.12.30
-google-generativeai==0.3.2
-stripe==7.14.0
-gunicorn==21.2.0
+openai-whisper
+yt-dlp
+google-generativeai
+stripe
+gunicorn

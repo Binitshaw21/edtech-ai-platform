@@ -4,3 +4,4 @@ Flask-Bcrypt==1.0.1
 pymongo[srv]==4.6.1
 python-dotenv==1.0.0
 openai-whisper
+gunicorn==21.2.0

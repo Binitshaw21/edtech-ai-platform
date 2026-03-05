@@ -1,96 +1,144 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="max-w-5xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 flex-grow">
-    
-    <div class="flex justify-between items-center mb-10 border-b border-gray-800 pb-6">
-        <h1 class="text-3xl font-bold text-white flex items-center gap-3">
-            <i class="fa-solid fa-gear text-indigo-500"></i> Account Settings
-        </h1>
-        <a href="{{ url_for('dashboard') }}" class="bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold py-2 px-6 rounded-lg transition-all flex items-center gap-2">
-            <i class="fa-solid fa-arrow-left"></i> Back to Hub
-        </a>
-    </div>
+<div class="container mt-5 pt-4" style="min-height: 80vh;">
+    <h2 class="fw-bold mb-4" style="color: #ffffff;">Account <span style="color: #e50914;">Settings</span></h2>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="mb-6 p-4 rounded-lg {% if category == 'success' %}bg-emerald-900/50 border border-emerald-500/50 text-emerald-200{% else %}bg-red-900/50 border border-red-500/50 text-red-200{% endif %} flex items-center gap-3">
-                    <i class="fa-solid {% if category == 'success' %}fa-check-circle{% else %}fa-circle-exclamation{% endif %}"></i> {{ message }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
-        <div class="lg:col-span-1 space-y-8">
-            <div class="glass-card p-6 rounded-2xl border border-gray-700">
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="h-16 w-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-2xl font-bold text-white shadow-lg">
-                        {{ username[0]|upper }}
-                    </div>
-                    <div>
-                        <h2 class="text-xl font-bold text-white">{{ username }}</h2>
-                        <span class="bg-indigo-500/20 text-indigo-400 text-xs px-2 py-1 rounded-md border border-indigo-500/30">Standard Plan</span>
-                    </div>
-                </div>
-                <div class="border-t border-gray-700/50 pt-4">
-                    <p class="text-gray-400 text-sm flex justify-between"><span>Study Packs Generated:</span> <span class="text-white font-bold">{{ notes_count }}</span></p>
-                </div>
-            </div>
-
-            <div class="glass-card p-6 rounded-2xl border border-gray-700">
-                <h3 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-lock text-gray-400"></i> Security</h3>
-                <form action="{{ url_for('settings') }}" method="POST" class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-1">Current Password</label>
-                        <input type="password" name="current_password" required class="w-full bg-gray-900 border border-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-1">New Password</label>
-                        <input type="password" name="new_password" required class="w-full bg-gray-900 border border-gray-700 text-white rounded-lg px-4 py-2 focus:ring-2 focus:ring-indigo-500 outline-none">
-                    </div>
-                    <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg transition-all">Update Password</button>
-                </form>
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="list-group shadow-sm" style="border-radius: 10px; overflow: hidden;">
+                <button class="list-group-item list-group-item-action bg-dark text-white border-secondary active-tab" onclick="switchTab('profile', this)" style="border-left: 4px solid #e50914;">
+                    <i class="fa-solid fa-user me-2"></i> Profile
+                </button>
+                <button class="list-group-item list-group-item-action bg-dark text-light border-secondary" onclick="switchTab('security', this)">
+                    <i class="fa-solid fa-lock me-2"></i> Security
+                </button>
+                <button class="list-group-item list-group-item-action bg-dark text-light border-secondary" onclick="switchTab('subscription', this)">
+                    <i class="fa-solid fa-star me-2"></i> Subscription
+                </button>
+                <button class="list-group-item list-group-item-action bg-dark text-light border-secondary" onclick="switchTab('donate', this)">
+                    <i class="fa-solid fa-hand-holding-heart me-2"></i> Donate
+                </button>
             </div>
         </div>
 
-        <div class="lg:col-span-2 space-y-8">
-            
-            <div class="glass-card p-8 rounded-2xl border border-gray-700 relative overflow-hidden">
-                <div class="absolute top-0 right-0 -mr-8 -mt-8 h-32 w-32 bg-indigo-500/10 blur-3xl rounded-full pointer-events-none"></div>
-                <h3 class="text-xl font-bold text-white mb-6"><i class="fa-regular fa-credit-card text-indigo-400"></i> Billing & Subscription</h3>
-                
-                <div class="bg-gray-900/50 rounded-xl p-5 border border-gray-700 mb-6 flex justify-between items-center">
-                    <div>
-                        <h4 class="text-white font-semibold">Free Tier</h4>
-                        <p class="text-gray-400 text-sm mt-1">Basic transcription and AI summaries.</p>
+        <div class="col-md-9">
+            <div class="card border-0 shadow-lg" style="background-color: #1a1a1a; border-radius: 12px;">
+                <div class="card-body p-4 p-md-5">
+                    
+                    <div id="profile-section" class="settings-section">
+                        <h4 class="text-white mb-4">User Details</h4>
+                        <div class="d-flex align-items-center mb-4">
+                            <img src="https://ui-avatars.com/api/?name={{ username }}&background=e50914&color=fff&size=100" class="rounded-circle border border-3 border-dark me-4" alt="Profile">
+                            <div>
+                                <h5 class="text-white m-0">@{{ username }}</h5>
+                                <p class="text-secondary m-0">Member since 2026</p>
+                                <span class="badge bg-success mt-2">Active</span>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-secondary">Username</label>
+                            <input type="text" class="form-control bg-dark border-secondary text-white" value="{{ username }}" disabled>
+                            <small class="text-secondary">Usernames cannot be changed after registration.</small>
+                        </div>
                     </div>
-                    <span class="text-2xl font-bold text-white">$0<span class="text-sm text-gray-500 font-normal">/mo</span></span>
-                </div>
-                
-                <button disabled class="w-full bg-gray-800 text-gray-500 border border-gray-700 font-bold py-3 rounded-xl cursor-not-allowed">
-                    <i class="fa-solid fa-lock"></i> Upgrade to Pro (Coming Soon)
-                </button>
-            </div>
 
-            <div class="glass-card p-8 rounded-2xl border border-emerald-500/30 relative overflow-hidden">
-                <div class="absolute top-0 right-0 -mr-8 -mt-8 h-32 w-32 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none"></div>
-                <h3 class="text-xl font-bold text-white mb-2"><i class="fa-solid fa-hand-holding-heart text-emerald-400"></i> Your Philanthropy Impact</h3>
-                <p class="text-gray-400 text-sm mb-6">Manage your sponsored students and donation history.</p>
-                
-                <div class="text-center py-8 bg-gray-900/50 rounded-xl border border-gray-800 border-dashed">
-                    <div class="text-emerald-500/50 text-4xl mb-3"><i class="fa-solid fa-seedling"></i></div>
-                    <p class="text-gray-400 font-medium">You haven't sponsored a student yet.</p>
-                    <p class="text-gray-500 text-sm mt-1 mb-4">Help someone access premium education tools.</p>
-                    <button disabled class="bg-emerald-600/50 text-emerald-200 font-semibold py-2 px-6 rounded-lg cursor-not-allowed border border-emerald-500/50">
-                        <i class="fa-solid fa-lock"></i> Setup Payment Method
-                    </button>
+                    <div id="security-section" class="settings-section d-none">
+                        <h4 class="text-white mb-4">Change Password</h4>
+                        <form onsubmit="event.preventDefault(); showComingSoon('Password update');">
+                            <div class="mb-3">
+                                <label class="form-label text-secondary">Current Password</label>
+                                <input type="password" class="form-control bg-dark border-secondary text-white" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-secondary">New Password</label>
+                                <input type="password" class="form-control bg-dark border-secondary text-white" required>
+                            </div>
+                            <button class="btn btn-brand px-4">Update Password</button>
+                        </form>
+                    </div>
+
+                    <div id="subscription-section" class="settings-section d-none">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="text-white m-0">Subscription Details</h4>
+                            <span class="badge bg-danger fs-6">Pro Plan</span>
+                        </div>
+                        
+                        <div class="p-4 border border-secondary rounded mb-4" style="background-color: #111;">
+                            <h5 class="text-white">SecureAI Copilot Pro</h5>
+                            <p class="text-secondary">Unlimited AI generations, priority processing, and full study packs.</p>
+                            <h3 class="text-white mb-0">$0.00 <span class="fs-6 text-secondary">/ month (Student Beta)</span></h3>
+                        </div>
+
+                        <h5 class="text-white mb-3">Payment Method</h5>
+                        <div class="d-flex align-items-center p-3 border border-secondary rounded mb-4" style="background-color: #222;">
+                            <i class="fa-brands fa-cc-visa text-white fs-1 me-3"></i>
+                            <div>
+                                <p class="text-white m-0">Visa ending in **** 4242</p>
+                                <p class="text-secondary m-0" style="font-size: 0.8rem;">Expires 12/28</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline-light" onclick="showComingSoon('Payment Gateway')">Update Payment Method</button>
+                    </div>
+
+                    <div id="donate-section" class="settings-section d-none">
+                        <div class="text-center py-4">
+                            <i class="fa-solid fa-hand-holding-heart text-danger mb-3" style="font-size: 4rem;"></i>
+                            <h3 class="text-white">Support a Student</h3>
+                            <p class="text-secondary mb-4" style="max-width: 400px; margin: auto;">Your donation helps provide free Pro subscriptions to underprivileged students around the world.</p>
+                            
+                            <div class="d-flex justify-content-center gap-2 mb-4">
+                                <button class="btn btn-outline-danger px-4" onclick="selectDonation(this)">$5</button>
+                                <button class="btn btn-danger px-4" onclick="selectDonation(this)">$10</button>
+                                <button class="btn btn-outline-danger px-4" onclick="selectDonation(this)">$25</button>
+                            </div>
+                            
+                            <button class="btn btn-brand btn-lg px-5" onclick="showComingSoon('Donation Processing')">Donate Now</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-
         </div>
     </div>
 </div>
+
+<script>
+    function switchTab(tabId, element) {
+        // Hide all sections
+        document.querySelectorAll('.settings-section').forEach(sec => sec.classList.add('d-none'));
+        // Show target section
+        document.getElementById(tabId + '-section').classList.remove('d-none');
+        
+        // Update sidebar styling
+        document.querySelectorAll('.list-group-item').forEach(btn => {
+            btn.classList.remove('text-white');
+            btn.classList.add('text-light');
+            btn.style.borderLeft = 'none';
+        });
+        element.classList.remove('text-light');
+        element.classList.add('text-white');
+        element.style.borderLeft = '4px solid #e50914';
+    }
+
+    function selectDonation(btn) {
+        document.querySelectorAll('#donate-section .btn-danger, #donate-section .btn-outline-danger').forEach(b => {
+            b.classList.remove('btn-danger');
+            b.classList.add('btn-outline-danger');
+        });
+        btn.classList.remove('btn-outline-danger');
+        btn.classList.add('btn-danger');
+    }
+
+    function showComingSoon(featureName) {
+        Swal.fire({
+            icon: 'info',
+            title: 'Coming Soon!',
+            text: `${featureName} integration is currently in development. Check back in the next update!`,
+            background: '#1a1a1a',
+            color: '#fff',
+            confirmButtonColor: '#e50914'
+        });
+    }
+</script>
 {% endblock %}

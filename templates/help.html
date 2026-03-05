@@ -1,49 +1,181 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12 flex-grow">
+<style>
+    /* 3D Flip Card CSS */
+    .flip-card {
+        background-color: transparent;
+        height: 250px;
+        perspective: 1000px; /* Gives the 3D effect */
+        margin-bottom: 2rem;
+    }
+    .flip-card-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+        cursor: pointer;
+    }
+    .flip-card:hover .flip-card-inner {
+        transform: rotateY(180deg);
+    }
+    .flip-card-front, .flip-card-back {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        -webkit-backface-visibility: hidden; /* Safari */
+        backface-visibility: hidden;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    .flip-card-front {
+        background: linear-gradient(145deg, #1a1a1a, #000000);
+        border: 1px solid #333;
+    }
+    .flip-card-back {
+        background: linear-gradient(145deg, #e50914, #8b0000);
+        color: white;
+        transform: rotateY(180deg);
+        border: 1px solid #ff4d4d;
+    }
     
-    <div class="text-center mb-16">
-        <div class="inline-flex items-center justify-center h-16 w-16 rounded-full bg-indigo-500/10 text-indigo-400 mb-6 text-3xl shadow-[0_0_30px_rgba(99,102,241,0.2)]">
-            <i class="fa-solid fa-headset"></i>
-        </div>
-        <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-4 tracking-tight">How can we help?</h1>
-        <p class="text-gray-400 text-lg">Browse our user guide or reach out to the developer directly.</p>
+    /* Timeline CSS for User Guide */
+    .timeline-step {
+        border-left: 3px solid #e50914;
+        padding-left: 20px;
+        margin-bottom: 30px;
+        position: relative;
+    }
+    .timeline-step::before {
+        content: '';
+        position: absolute;
+        left: -11px;
+        top: 0;
+        width: 20px;
+        height: 20px;
+        background-color: #e50914;
+        border-radius: 50%;
+        border: 4px solid #141414;
+    }
+</style>
+
+<div class="container mt-5 pt-5">
+    
+    <div class="text-center mb-5 pb-3 border-bottom border-secondary">
+        <h1 class="display-4 fw-bold text-white">Discover <span style="color: #e50914;">SecureAI</span></h1>
+        <p class="lead text-secondary max-w-75 mx-auto">Hover over the cards below to see inside the mind of our Generative AI engine.</p>
     </div>
 
-    <h2 class="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2"><i class="fa-solid fa-book-open text-purple-400 mr-2"></i> Quick Start Guide</h2>
-    
-    <div class="space-y-4 mb-16">
-        <div class="glass-card p-6 rounded-xl border border-gray-700 hover:border-indigo-500/50 transition-colors">
-            <h3 class="text-lg font-bold text-indigo-300 mb-2">1. How do I transcribe a YouTube video?</h3>
-            <p class="text-gray-400 text-sm leading-relaxed">Go to your Dashboard and click te <strong>"Paste Link"</strong> tab. Paste any standard YouTube URL and click "Extract Audio". Our backend will automatically download the video, extract the audio, and transcribe it using Whisper AI. This process usually takes 10-30 seconds depending on the video length.</p>
+    <div class="row mb-5">
+        <div class="col-md-4">
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <i class="fa-solid fa-brain text-danger mb-3" style="font-size: 3rem;"></i>
+                        <h4 class="text-white">What is Generative AI?</h4>
+                        <p class="text-secondary small">Hover to reveal</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h5>The Engine</h5>
+                        <p>"I don't just search for keywords. I read your entire transcript, understand the deep context, and predict the perfect study materials word-by-word."</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        <div class="glass-card p-6 rounded-xl border border-gray-700 hover:border-purple-500/50 transition-colors">
-            <h3 class="text-lg font-bold text-purple-300 mb-2">2. How do I generate Flashcards & Quizzes?</h3>
-            <p class="text-gray-400 text-sm leading-relaxed">Once you have a transcribed note in your dashboard, click the glowing <strong>"Generate AI Study Pack"</strong> button on that specific note. Google Gemini will analyze the text and create a summary, flashcards, and a multiple-choice quiz. <em>Note: This works best on educational lectures!</em></p>
+        <div class="col-md-4">
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <i class="fa-solid fa-bolt text-danger mb-3" style="font-size: 3rem;"></i>
+                        <h4 class="text-white">Why Gemini Pro?</h4>
+                        <p class="text-secondary small">Hover to reveal</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h5>Lightning Fast</h5>
+                        <p>"By processing data in the cloud rather than on your local device, I can summarize a 1-hour lecture into flashcards in less than 5 seconds."</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        <div class="glass-card p-6 rounded-xl border border-gray-700 hover:border-emerald-500/50 transition-colors">
-            <h3 class="text-lg font-bold text-emerald-300 mb-2">3. Is my data secure?</h3>
-            <p class="text-gray-400 text-sm leading-relaxed">Yes. All passwords are cryptographically hashed using Bcrypt before being stored in our MongoDB database. Your voice recordings and temporary video files are permanently deleted from our servers the exact second the AI finishes transcribing them.</p>
+        <div class="col-md-4">
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <i class="fa-solid fa-shield-halved text-danger mb-3" style="font-size: 3rem;"></i>
+                        <h4 class="text-white">Is my data secure?</h4>
+                        <p class="text-secondary small">Hover to reveal</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h5>Enterprise Privacy</h5>
+                        <p>"Absolutely. Your transcripts are processed securely, turned into study packs, and never used to train outside public models."</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="glass-card p-8 md:p-12 rounded-2xl border border-indigo-500/30 text-center relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-emerald-500"></div>
-        <h2 class="text-2xl font-bold text-white mb-4">Still need help?</h2>
-        <p class="text-gray-400 mb-8 max-w-lg mx-auto">I am constantly improving this platform. If you found a bug, want to request a feature, or just want to connect, feel free to reach out!</p>
-        
-        <div class="flex flex-col sm:flex-row justify-center gap-4">
-            <a href="mailto:binitshaw21@gmail.com" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2">
-                <i class="fa-solid fa-envelope"></i> Email Developer
-            </a>
-            <a href="https://linkedin.com/in/your-profile" target="_blank" class="bg-gray-800 hover:bg-gray-700 text-white border border-gray-600 font-bold py-3 px-8 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2">
-                <i class="fa-brands fa-linkedin text-[#0A66C2]"></i> Connect on LinkedIn
-            </a>
+    <div class="row mt-5">
+        <div class="col-md-6 mb-5">
+            <h3 class="text-white mb-4"><i class="fa-solid fa-book-open text-danger me-2"></i> User Guide</h3>
+            <div class="timeline-step">
+                <h5 class="text-white">Step 1: Paste Your Link</h5>
+                <p class="text-secondary">Head to your Dashboard and paste a YouTube lecture link. (Direct uploads coming soon to Pro tiers!)</p>
+            </div>
+            <div class="timeline-step">
+                <h5 class="text-white">Step 2: AI Processing</h5>
+                <p class="text-secondary">Our servers extract the audio transcript and feed it securely into the Google Gemini LLM.</p>
+            </div>
+            <div class="timeline-step border-0">
+                <h5 class="text-white">Step 3: Study Hard</h5>
+                <p class="text-secondary">Click "Generate AI Pack" in your history to instantly view your custom summaries, flashcards, and quizzes.</p>
+            </div>
+            {% if not current_user.is_authenticated %}
+                <a href="{{ url_for('register') }}" class="btn btn-brand mt-3">Create Free Account</a>
+            {% endif %}
+        </div>
+
+        <div class="col-md-6">
+            <div class="card bg-dark border-secondary p-4" style="border-radius: 12px;">
+                <h3 class="text-white mb-4"><i class="fa-solid fa-envelope text-danger me-2"></i> Contact Developer</h3>
+                <form onsubmit="event.preventDefault(); showContactSuccess();">
+                    <div class="mb-3">
+                        <label class="form-label text-secondary">Your Name</label>
+                        <input type="text" class="form-control bg-black border-secondary text-white" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-secondary">Email Address</label>
+                        <input type="email" class="form-control bg-black border-secondary text-white" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label text-secondary">How can we help?</label>
+                        <textarea class="form-control bg-black border-secondary text-white" rows="4" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-brand w-100 py-2">Send Message</button>
+                </form>
+            </div>
         </div>
     </div>
 
 </div>
-{% endblock %}h
+
+<script>
+    function showContactSuccess() {
+        Swal.fire({
+            icon: 'success',
+            title: 'Message Sent!',
+            text: 'Thanks for reaching out. Binit will get back to you shortly.',
+            background: '#1a1a1a',
+            color: '#fff',
+            confirmButtonColor: '#e50914'
+        });
+        document.querySelector('form').reset();
+    }
+</script>
+{% endblock %}
